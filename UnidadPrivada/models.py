@@ -1,6 +1,6 @@
 from django.db import models
 
-from mongoengine import Document, EmbeddedDocument, fields
+from mongoengine import Document, EmbeddedDocument, fields, LazyReferenceField
 from CuentaCobro.models import Cuenta_Cobro
 import datetime
 
@@ -32,21 +32,21 @@ class PropietarioField(EmbeddedDocument):
     CORREO = fields.EmailField()
     TIPO_DOCUMENTO = fields.StringField(required=True)
     DOCUMENTO = fields.StringField(required=True)
-    USUARIO_ID = fields.ReferenceField('Usuarios')
+    USUARIO_ID = fields.LazyReferenceField('Usuarios', passthrough=False, dbref=False)
 
 class DetalleField(EmbeddedDocument):
     PERIODO = fields.StringField(required=True)
     CREDITO = fields.IntField()
     DEBITO = fields.IntField()
-    COMPROBANTE_ID = fields.ReferenceField('Comprobantes')
-    CUENTA_COBRO_ID = fields.ReferenceField('Cuenta_Cobro')
+    COMPROBANTE_ID = fields.LazyReferenceField('Comprobantes', passthrough=False, dbref=False)
+    CUENTA_COBRO_ID = fields.LazyReferenceField('Cuenta_Cobro', passthrough=False, dbref=False)
 
 class EstadoCuentaField(EmbeddedDocument):
     SALDO = fields.IntField()
     DETALLE = fields.ListField(fields.EmbeddedDocumentField(DetalleField))
 
 class Unidades_Privadas(Document):
-    PROPIEDAD_ID = fields.ReferenceField('Propiedades_Horizontales')
+    PROPIEDAD_ID = fields.LazyReferenceField('Propiedades_Horizontales', passthrough=False, dbref=False)
     IDENTIFICADOR = fields.StringField(required=True)
     GRUPO = fields.StringField(required=True)
     MATRICULA_INMOBILIARIA = fields.StringField(required=True)

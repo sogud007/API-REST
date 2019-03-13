@@ -6,9 +6,9 @@ from Usuario.models import Usuarios
  
 #class CreateUsuarioViewSet(generics.ListCreateAPIView):
 class UsuarioViewSet(viewsets.ModelViewSet):
-    lookup_field = 'id'
     queryset = Usuarios.objects.all()
     serializer_class = UsuariosSerializer
+    lookup_field = 'CORREO'
     
     '''
     queryset = Usuarios.objects.all()

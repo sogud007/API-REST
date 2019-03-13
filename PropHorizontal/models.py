@@ -1,5 +1,5 @@
 from django.db import models
-from mongoengine import Document, EmbeddedDocument, fields, ReferenceField
+from mongoengine import Document, EmbeddedDocument, fields, LazyReferenceField
 from Usuario.models import Usuarios
 from Modulo.models import Modulos
 import datetime
@@ -8,7 +8,7 @@ import datetime
 
 class DireccionField(EmbeddedDocument):
     PAIS = fields.StringField(required=True)
-    DEPARTAMETO = fields.StringField(required=True)
+    DEPARTAMENTO = fields.StringField(required=True)
     MUNICIPIO = fields.StringField(required=True)
     DIRECCION = fields.StringField(required=True)
     TELEFONO = fields.StringField(required=False)
@@ -17,7 +17,7 @@ class RepresentanteField(EmbeddedDocument):
     NOMBRE = fields.StringField(required=True)
     TIPO_DOCUMENTO = fields.StringField(required=True)
     NUMERO_DOCUMENTO = fields.StringField(required=True)
-    CORREO = fields.ReferenceField(Usuarios)
+    CORREO = fields.LazyReferenceField(Usuarios, passthrough=False, dbref=False)
 
 class UbicacionField(EmbeddedDocument):
     LATITUD = fields.FloatField()
@@ -31,7 +31,7 @@ class AdministradorField(EmbeddedDocument):
     NOMBRE = fields.StringField(required=True)
     TELEFONO = fields.StringField(required=True)
     CORREO = fields.EmailField()
-    USUARIO_ID = fields.ReferenceField(Usuarios)
+    USUARIO_ID = fields.LazyReferenceField(Usuarios, passthrough=False, dbref=False)
 
 class ParqueaderoVisitanteField(EmbeddedDocument):
     TIPO = fields.StringField(required=True)
@@ -42,12 +42,12 @@ class ParqueaderoField(EmbeddedDocument):
     CANTIDAD = fields.IntField()
     MAXIMO_CARROS = fields.IntField()
     MAXIMO_MOTOS = fields.IntField()
-    PARQUEADEROS_VISITANTES = fields.EmbeddedDocumentField(ParqueaderoVisitanteField)
+    PARQUEADERO_VISITANTES = fields.EmbeddedDocumentField(ParqueaderoVisitanteField)
 
 class UnidadPrivadaField(EmbeddedDocument):
     IDENTIFICADOR = fields.StringField(required=True)
     GRUPO = fields.StringField(required=True)
-    UNIDAD_PRIVADA_ID = fields.ReferenceField('Unidades_Privadas')
+    UNIDAD_PRIVADA_ID = fields.LazyReferenceField('Unidades_Privadas', passthrough=False, dbref=False)
 
 class DetalleField(EmbeddedDocument):
     NOMBRE = fields.StringField(required=True)
@@ -69,6 +69,7 @@ class ModuloField(EmbeddedDocument):
 class Propiedades_Horizontales(Document):
     NIT = fields.StringField(required=True)
     RAZON_SOCIAL = fields.StringField(required=True)
+    DESCRIPCION = fields.StringField()
     DIRECCION = fields.EmbeddedDocumentField(DireccionField)
     REPRESENTANTE = fields.EmbeddedDocumentField(RepresentanteField)
     UBICACION = fields.EmbeddedDocumentField(UbicacionField)
@@ -76,6 +77,7 @@ class Propiedades_Horizontales(Document):
     VALOR_PROMEDIO_ADMINISTRACION = fields.IntField()
     ADMINISTRADOR = fields.EmbeddedDocumentField(AdministradorField)
     CLASE_PROPIEDAD = fields.StringField()
+    RESOLUCION = fields.FileField()
     ACTA_CONSEJO = fields.FileField()
     PARQUEADEROS = fields.EmbeddedDocumentField(ParqueaderoField)
     GRUPOS = fields.EmbeddedDocumentField(GrupoField)

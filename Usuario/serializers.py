@@ -5,3 +5,4 @@ class UsuariosSerializer(serializers.DocumentSerializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
+        lookup_field = 'id'

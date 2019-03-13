@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^Comprobante/', include('Comprobante.urls')),
     url(r'^CuentaCobro/', include('CuentaCobro.urls')),
     url(r'^Parametro/', include('Parametro.urls')),
+    url(r'^PropiedadHorizontal/', include('PropHorizontal.urls')),
     url(r'^HistoricoParametro/', include('HistoricoParametro.urls')),
     url(r'^UnidadPrivada/', include('UnidadPrivada.urls')),
     url(r'^Noticia/', include('Noticia.urls')),

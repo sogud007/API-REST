@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'Noticia'
 ]
 
+#AUTH_USER_MODEL = 'Usuario.Usuarios'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -129,3 +131,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'

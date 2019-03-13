@@ -1,6 +1,6 @@
 from django.db import models
 
-from mongoengine import Document, EmbeddedDocument, fields, ReferenceField
+from mongoengine import Document, EmbeddedDocument, fields, LazyReferenceField
 from PropHorizontal.models import Propiedades_Horizontales
 from Cobro.models import Cobros
 from Comprobante.models import Comprobantes
@@ -9,7 +9,7 @@ import datetime
 class UnidadPrivadaField(EmbeddedDocument):
     IDENTIFICADOR = fields.StringField(required=True)
     GRUPO = fields.StringField(required=True)
-    UNIDAD_PRIVADA_ID = fields.ReferenceField('Unidades_Privadas')
+    UNIDAD_PRIVADA_ID = fields.LazyReferenceField('Unidades_Privadas', passthrough=False, dbref=False)
 
 class PeriodoCobroField(EmbeddedDocument):
     FECHA_INICIAL = fields.DateTimeField(default=datetime.datetime.utcnow)
@@ -18,7 +18,7 @@ class PeriodoCobroField(EmbeddedDocument):
 class ElementoField(EmbeddedDocument):
     DESCRIPCION = fields.StringField(required=True)
     VALOR = fields.IntField()
-    COBRO_ID = fields.ReferenceField(Cobros)
+    COBRO_ID = fields.LazyReferenceField(Cobros, passthrough=False, dbref=False)
 
 class DireccionField(EmbeddedDocument):
     PAIS = fields.StringField(required=True)
@@ -27,7 +27,7 @@ class DireccionField(EmbeddedDocument):
     DIRECCION = fields.StringField(required=True)
 
 class PropiedadHorizontalField(EmbeddedDocument):
-    PROPIEDAD_ID = fields.ReferenceField(Propiedades_Horizontales)
+    PROPIEDAD_ID = fields.LazyReferenceField(Propiedades_Horizontales, passthrough=False, dbref=False)
     NOMBRE = fields.StringField(required=True)
     DIRECCION = fields.EmbeddedDocumentField(DireccionField)
     NIT = fields.StringField(required=True)
@@ -36,7 +36,7 @@ class ComprobanteField(EmbeddedDocument):
     PERIODO = fields.StringField(required=True)
     VALOR_PAGO = fields.IntField()
     FECHA_PAGO = fields.DateTimeField(default=datetime.datetime.utcnow)
-    COMPROBANTE_ID = fields.ReferenceField(Comprobantes)
+    COMPROBANTE_ID = fields.LazyReferenceField(Comprobantes, passthrough=False, dbref=False)
 
 class Cuenta_Cobro(Document):
     UNIDAD_PRIVADA = fields.EmbeddedDocumentField(UnidadPrivadaField)
@@ -51,4 +51,5 @@ class Cuenta_Cobro(Document):
     VALOR_TOTAL = fields.FloatField()
     PROPIEDAD_HORIZONTAL = fields.EmbeddedDocumentField(PropiedadHorizontalField)
     COMPROBANTE = fields.EmbeddedDocumentField(ComprobanteField)
+    DOCUMENTO = fields.FileField()
     HABILITADO = fields.BooleanField()
